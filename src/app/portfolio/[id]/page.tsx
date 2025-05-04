@@ -14,11 +14,10 @@ import { ExternalLink, Github } from "lucide-react";
 import type { Metadata } from "next";
 
 interface PortfolioPageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string }; // Asegúrate de que sea el tipo correcto
 }
 
+// Generar metadata para la página
 export async function generateMetadata({
   params,
 }: PortfolioPageProps): Promise<Metadata> {
@@ -44,13 +43,15 @@ export async function generateMetadata({
   };
 }
 
+// Página principal del portfolio
 export default async function PortfolioPage({ params }: PortfolioPageProps) {
+  const { id } = params;
   const supabase = createClient();
 
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!profile) {
@@ -60,7 +61,7 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
   const { data: projects } = await supabase
     .from("projects")
     .select("*")
-    .eq("user_id", params.id)
+    .eq("user_id", id)
     .order("created_at", { ascending: false });
 
   return (
@@ -83,20 +84,23 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
                 <p className="text-muted-foreground">{profile.job_title}</p>
               )}
             </div>
+
             {profile.bio && (
               <div className="space-y-2">
                 <h2 className="text-xl font-semibold">About</h2>
                 <p className="text-muted-foreground">{profile.bio}</p>
               </div>
             )}
+
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Contact</h2>
               <ContactForm
-                recipientId={params.id}
+                recipientId={id}
                 recipientEmail={profile.email || ""}
               />
             </div>
           </div>
+
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Projects</h2>
             {projects && projects.length > 0 ? (

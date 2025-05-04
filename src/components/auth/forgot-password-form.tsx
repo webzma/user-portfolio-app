@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -28,8 +29,11 @@ export function ForgotPasswordForm() {
         throw error;
       }
 
+      toast("Password reset email sent. Please check your inbox.");
       setIsSubmitted(true);
-    } catch (error: any) {
+    } catch (error: Error) {
+      console.error("Error sending password reset email:", error.message);
+      toast("Error sending password reset email. Please try again.");
     } finally {
       setIsLoading(false);
     }

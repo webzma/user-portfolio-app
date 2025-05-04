@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -35,7 +36,9 @@ export function ResetPasswordForm() {
       }
 
       router.push("/signin");
-    } catch (error: any) {
+    } catch (error: Error) {
+      console.error("Error resetting password:", error.message);
+      toast("Error resetting password. Please try again.");
     } finally {
       setIsLoading(false);
     }

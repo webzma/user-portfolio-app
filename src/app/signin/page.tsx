@@ -2,11 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SignInForm } from "@/components/auth/signin-form";
 
-export default async function SignIn({
-  searchParams,
-}: {
-  searchParams: { message: string };
-}) {
+export default async function SignIn() {
   const supabase = createClient();
   const {
     data: { session },

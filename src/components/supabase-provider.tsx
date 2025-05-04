@@ -2,7 +2,13 @@
 
 import type React from "react";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import type { Session, User } from "@supabase/supabase-js";
@@ -24,13 +30,13 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const supabase = createClient();
 
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
     setSession(session);
     setUser(session?.user ?? null);
-  };
+  }, [supabase]);
 
   useEffect(() => {
     refreshSession();
@@ -46,7 +52,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router, supabase]);
+  }, [router, supabase, refreshSession]);
 
   const signOut = async () => {
     await supabase.auth.signOut();

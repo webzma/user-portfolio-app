@@ -10,6 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Github } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export function SignInForm() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,14 @@ export function SignInForm() {
 
       router.push("/dashboard");
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error signing in:", error.message);
+      } else {
+        console.error("Error signing in:", error);
+      }
+      setIsLoading(false);
+      toast.error("Error signing in. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +62,14 @@ export function SignInForm() {
       if (error) {
         throw error;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error signing in with GitHub:", error.message);
+      } else {
+        console.error("Error signing in with GitHub:", error);
+      }
+      toast.error("Error signing in with GitHub");
+    } finally {
       setIsLoading(false);
     }
   };

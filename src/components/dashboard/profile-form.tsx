@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Database } from "@/types/supabase";
 import { useSupabase } from "@/components/supabase-provider";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -48,7 +49,13 @@ export function ProfileForm({ profile }: { profile: Profile | null }) {
 
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
       setAvatarUrl(data.publicUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error uploading avatar:", error.message);
+      } else {
+        console.error("Error uploading avatar:", error);
+      }
+      toast("Error uploading avatar. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -74,7 +81,13 @@ export function ProfileForm({ profile }: { profile: Profile | null }) {
       }
 
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error updating profile:", error.message);
+      } else {
+        console.error("Error updating profile:", error);
+      }
+      toast("Error updating profile. Please try again.");
     } finally {
       setIsLoading(false);
     }

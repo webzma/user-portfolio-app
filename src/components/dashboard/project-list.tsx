@@ -27,6 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 type Project = Database["public"]["Tables"]["projects"]["Row"];
 
@@ -63,7 +64,14 @@ export function ProjectsList({
       setProjects(projects.filter((project) => project.id !== id));
 
       router.refresh();
-    } catch (error: any) {}
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error deleting project:", error.message);
+      } else {
+        console.error("Error deleting project:", error);
+      }
+      toast("Error deleting project. Please try again.");
+    }
   };
 
   const handleSaveProject = async (
@@ -109,7 +117,14 @@ export function ProjectsList({
 
       router.refresh();
       setIsDialogOpen(false);
-    } catch (error: any) {}
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error saving project:", error.message);
+      } else {
+        console.error("Error saving project:", error);
+      }
+      toast("Error saving project. Please try again.");
+    }
   };
 
   return (

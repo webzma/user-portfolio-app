@@ -47,7 +47,14 @@ export function ContactForm({ recipientId, recipientEmail }: ContactFormProps) {
       setName("");
       setEmail("");
       setMessage("");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error sending message:", error.message);
+      } else {
+        console.error("Error sending message:", error);
+      }
+      setIsLoading(false);
+      alert("Error sending message. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +64,7 @@ export function ContactForm({ recipientId, recipientEmail }: ContactFormProps) {
     return (
       <div className="text-center py-4">
         <p className="text-green-600 dark:text-green-400 font-medium">
-          Thank you for your message! I'll get back to you soon.
+          Thank you for your message! I&apos;ll get back to you soon.
         </p>
         <Button
           variant="link"

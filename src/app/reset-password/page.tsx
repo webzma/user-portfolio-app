@@ -1,12 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 
 export default async function ResetPassword() {
-  const supabase = createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
